@@ -1,6 +1,7 @@
 import SearchBar from "./components/SearchBar";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./components/theme";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -12,6 +13,7 @@ function App() {
         <div className="app">
           <main className="content">
             <SearchBar />
+            <Dashboard />
           </main>
         </div>
       </ThemeProvider>
