@@ -1,21 +1,13 @@
-import SearchBar from "./components/SearchBar";
-import { CssBaseline, ThemeProvider } from "@mui/material";
-import { ColorModeContext, useMode } from "./components/theme";
-
+import React from "react";
+// import Dashboard from "./components/dashboard";
+import Header from "./components/Header";
+import SearchBar from "./components/Search";
 function App() {
-  const [theme, colorMode] = useMode();
-
   return (
-    <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <div className="app">
-          <main className="content">
-            <SearchBar />
-          </main>
-        </div>
-      </ThemeProvider>
-    </ColorModeContext.Provider>
+    <div className="main">
+      <Header></Header>
+      <SearchBar></SearchBar>
+    </div>
   );
 }
 
