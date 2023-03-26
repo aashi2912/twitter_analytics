@@ -15,8 +15,7 @@ Including another URLconf
 """
 from django.urls import path, include
 from TwitterAnalytics.api.urls import urlpatterns
-from TwitterAnalytics.api.views import Hashtag
 
 urlpatterns = [
-    path('/', include('TwitterAnalytics.api.urls')),
+    path('', include('TwitterAnalytics.api.urls')),
 ]

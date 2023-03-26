@@ -6,9 +6,7 @@ from django.shortcuts import get_object_or_404
 from bson.json_util import dumps
 
 from TwitterAnalytics.db import TweetCollection, UsersCollection, RepliesCollection
-from TwitterAnalytics.models import Tweet, User
-from .serializers import TweetSerializer, UserSerializer
-import pipelines
+from .pipelines import getPipelineForHashtag, getPipelineForUser, getPipelineForUserHashtag, getPipelineForUserReplies, getUserEngagementPipeline
 
 url = 'localhost:8000/hashtags/elonmusk'
 
@@ -21,76 +19,49 @@ url = 'localhost:8000/hashtags/elonmusk'
 class HashtagAggregates(APIView):
 
     def get(self, request, hashtag):
-        pipeline = pipelines.getPipelineForUserHashtag(hashtag)
+        pipeline = getPipelineForHashtag(hashtag)
         tweetResults = list(TweetCollection.aggregate(pipeline))
-        repliesResults = list(RepliesCollection.aggregate(pipeline))
-        result = tweetResults + repliesResults
-        return dumps(result)
+        # repliesResults = list(RepliesCollection.aggregate(pipeline))
+        result = {
+            'tweets': tweetResults,
+            # 'replies': repliesResults
+        }
+        return Response(dumps(result))
 
 class UserHashtagAggregates(APIView):
 
     def get(self, request, username, hashtag):
-        pipeline = pipelines.getPipelineForUserHashtag(username, hashtag)
+        pipeline = getPipelineForUserHashtag(username, hashtag)
         tweetResults = list(TweetCollection.aggregate(pipeline))
-        repliesResults = list(RepliesCollection.aggregate(pipeline))
-        result = tweetResults + repliesResults
-        return dumps(result)
+        # repliesResults = list(RepliesCollection.aggregate(pipeline))
+        result = {
+            'tweets': tweetResults,
+            # 'replies': repliesResults
+        }
+        return Response(dumps(result))
 
 
 class UserAggregates(APIView):
 
-    def get(self, request, username, hashtag):
-        pipeline = pipelines.getPipelineForUserHashtag(username)
+    def get(self, request, username):
+        pipeline = getPipelineForUser(username)
+        print(pipeline)
         tweetResults = list(TweetCollection.aggregate(pipeline))
+        userid = 0
+        document = TweetCollection.find_one({'username': username})
+        if document:
+            userid = document['user_id']
+
+        pipeline = getPipelineForUserReplies(str(userid))
         repliesResults = list(RepliesCollection.aggregate(pipeline))
-        result = tweetResults + repliesResults
-        return dumps(result)
 
+        pipeline = getUserEngagementPipeline(username)
+        engagementMetrics = list(TweetCollection.aggregate(pipeline))
 
-class UserData(APIView):
+        result = {
+            'tweets': tweetResults,
+            'replies': repliesResults,
+            'engagement': engagementMetrics
+        }
 
-    def get(self, request, userId, hashtag):
-        return
-
-
-class UserList(APIView):
-    serializer_class = UserSerializer
-
-    def get(self, request, userId):
-        return
-
-    def put(self, request, userId):
-        user = User
-        UsersCollection.aggregate({
-
-        })
-        serializer = UserSerializer(book, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, userId):
-        book = get_object_or_404(User, pk=userId)
-        book.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class TweetList(APIView):
-    serializer_class = UserSerializer
-
-
-    def get(self, request, userId):
-        return
-
-    def put(self, request, userId):
-        serializer = UserSerializer(book, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, userId):
-        book = get_object_or_404(User, pk=userId)
-        book.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(dumps(result))
