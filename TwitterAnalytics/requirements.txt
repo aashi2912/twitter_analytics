@@ -1,0 +1,4 @@
+Django==4.1.7
+djangorestframework==3.14.0
+pymongo==4.3.3
+tweetnlp==0.4.2
