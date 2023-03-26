@@ -1,0 +1,21 @@
+# Byte-compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Django-related files
+*.log
+*.pot
+*.pyc
+db.sqlite3
+media/
+staticfiles/
+.env
+.venv
+
+# Project-specific files
+*.settings
+*.pydevproject
+*.idea/
+.vscode/
