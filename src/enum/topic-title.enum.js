@@ -7,7 +7,7 @@ const topicTitleEnum = {
   "celebrity&pop_culture": "Celebrity and Pop Culture",
   gaming: "Gaming",
   "film_tv&video": "Film TV and Video",
-  "celebrity&pop_culture": "Celebrity and Pop Culture",
+  "film_tv&_video": "Film TV and Video",
   music: "Music",
   "fitness&health": "Fitness and health",
   "food&dining": "Food and Dining",

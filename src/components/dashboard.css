@@ -2,9 +2,23 @@
   width: 30%;
 }
 
+.barCompleted {
+  background-color: lightblue;
+}
+
+.label {
+  color: rgb(60, 62, 99);
+  margin-left: 20px;
+}
+
+h5 {
+  margin: 0;
+}
+
 .card {
   border: 1px solid #ccc;
-  margin-bottom: 10px;
+  margin: 10px 20px;
+  min-width: 540px;
   padding: 10px;
 }
 
