@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import Dashboard from "./components/Dashboard";
-import data from "./static-data";
+// import data1 from "./static-data";
 import Header from "./components/Header";
 import SearchBar from "./components/Search";
 import { topicTitleEnum } from "./enum/topic-title.enum";
 
-const adaptData = (data) => {
+let adaptedData = {};
+const adaptData = (data, user, hashtag) => {
   const newData = {};
-  if (data.engagement) {
+  if (data.engagement && data.engagement.length) {
     newData.engagement = true;
     newData.likes_count = data.engagement[0].likes_count;
     newData.retweets_count = data.engagement[0].retweets_count;
@@ -24,7 +25,7 @@ const adaptData = (data) => {
       const { a1, b1, c1, a, b, c } = getCountPercentage(alltopicTweets);
       modifiedTweets.push({
         topic,
-        title: topicTitleEnum[topic],
+        title: topicTitleEnum[topic] ?? topic,
         neutralSentiment: a1,
         positiveSentiment: b1,
         negativeSentiment: c1,
@@ -48,7 +49,7 @@ const adaptData = (data) => {
       const { a1, b1, c1, a, b, c } = getCountPercentage(alltopicTweets);
       modifiedReplies.push({
         topic,
-        title: topicTitleEnum[topic],
+        title: topicTitleEnum[topic] ?? topic,
         neutralSentiment: a1,
         positiveSentiment: b1,
         negativeSentiment: c1,
@@ -62,7 +63,8 @@ const adaptData = (data) => {
     });
     newData.replies = newData.replies.slice(0, 10);
   }
-  console.log(newData);
+  if (user) newData.user = user;
+  if (hashtag) newData.hashtag = hashtag;
   return newData;
 };
 
@@ -83,12 +85,36 @@ const getCountPercentage = (alltopicTweets) => {
 };
 
 function App() {
-  const adaptedData = adaptData(data);
+  const [data, setData] = useState({});
+
+  const handleChange = () => {
+    setData(adaptedData);
+  };
+  // adaptedData = adaptData(data1, "demo");
+
+  const handleSearch = async ({ user, hashtag }) => {
+    let url = "";
+    if (user && hashtag) {
+      url = `http://127.0.0.1:8000/user/${user}/tag/${hashtag}`;
+    } else if (user) {
+      url = `http://127.0.0.1:8000/user/${user}`;
+    } else if (hashtag) {
+      url = `http://127.0.0.1:8000/tag/${hashtag}`;
+    } else {
+      return;
+    }
+    const response = await fetch(url);
+    const jsonData = await response.json();
+    // console.log("soni", jsonData);
+    adaptedData = adaptData(JSON.parse(jsonData), user, hashtag);
+    handleChange(adaptedData);
+  };
+
   return (
     <div className="main">
       <Header></Header>
-      <SearchBar></SearchBar>
-      <Dashboard {...adaptedData}></Dashboard>
+      <SearchBar onSearch={handleSearch}></SearchBar>
+      <Dashboard {...data}></Dashboard>
     </div>
   );
 }

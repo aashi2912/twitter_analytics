@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./dashboard.css";
 import ProgressBar from "@ramonak/react-progress-bar";
 import { Chart } from "react-google-charts";
@@ -86,10 +86,17 @@ const Card = (cardDetails, index) => {
 };
 
 const Dashboard = (data) => {
-  const { tweets, replies, engagement } = data;
+  const [childData, setChildData] = useState(null);
+
+  useEffect(() => {
+    setChildData(data);
+    handleSectionClick(data?.tweets?.length ? "tweets" : null);
+  }, [data]);
+  const { tweets, replies, engagement, user, hashtag } = childData ?? {};
+
   const { tweetsData, repliesData, options } =
     generateTweetsAndRepliesDataForPieChart(tweets, replies);
-  const [selectedSection, setSelectedSection] = useState("tweets");
+  const [selectedSection, setSelectedSection] = useState(null);
 
   const handleSectionClick = (section) => {
     setSelectedSection(section);
@@ -112,7 +119,7 @@ const Dashboard = (data) => {
           </div>
         );
         cards.push(
-          ...tweets.map((tweet, index) => {
+          ...tweets?.map((tweet, index) => {
             return Card(tweet, index);
           })
         );
@@ -130,7 +137,7 @@ const Dashboard = (data) => {
           </div>
         );
         cards.push(
-          ...replies.map((reply, index) => {
+          ...replies?.map((reply, index) => {
             return Card(reply, index);
           })
         );
@@ -143,7 +150,7 @@ const Dashboard = (data) => {
   };
 
   return (
-    <div className="my-component">
+    <div className="my-component" key={user + hashtag}>
       <div>
         {engagement ? (
           <div
@@ -168,16 +175,29 @@ const Dashboard = (data) => {
         )}
       </div>
       <div className="section-nav">
-        <button
-          className={`button ${selectedSection === "tweets" ? "active" : ""}`}
-          style={{
-            backgroundColor: selectedSection === "tweets" ? "#9dbbda" : "gray",
-          }}
-          onClick={() => handleSectionClick("tweets")}
-        >
-          Tweets
-        </button>
-        {replies ? (
+        {tweets?.length ? (
+          <button
+            className={`button ${selectedSection === "tweets" ? "active" : ""}`}
+            style={{
+              backgroundColor:
+                selectedSection === "tweets" ? "#9dbbda" : "gray",
+            }}
+            onClick={() => handleSectionClick("tweets")}
+          >
+            Analytics of Tweets of{" "}
+            {user ? "User @" : hashtag ? "Hashtag #" : ""}
+            {user ?? hashtag}
+          </button>
+        ) : (
+          <div>
+            {tweets ? (
+              <h2>No Data Available for this input !!</h2>
+            ) : (
+              <h5>Search some user or hashtag !!</h5>
+            )}
+          </div>
+        )}
+        {replies?.length ? (
           <button
             className={`button ${
               selectedSection === "replies" ? "active" : ""
@@ -188,7 +208,8 @@ const Dashboard = (data) => {
             }}
             onClick={() => handleSectionClick("replies")}
           >
-            Replies
+            Analytics of Replies of {user ? "User @" : ""}
+            {user}
           </button>
         ) : (
           <div></div>
