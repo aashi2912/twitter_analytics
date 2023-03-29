@@ -1,0 +1,56 @@
+.section {
+  width: 30%;
+}
+
+.card {
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.card h3 {
+  margin-top: 0;
+}
+
+.subsection {
+  margin-top: 10px;
+}
+
+.subsection h4 {
+  margin: 0;
+}
+
+.section-nav {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.subsection p {
+  margin: 5px 0;
+}
+
+.my-component {
+  max-width: 1800px;
+  margin: 10px;
+}
+
+.section-nav {
+  display: flex;
+}
+
+.button {
+  flex: 1;
+  background-color: #e5e5e5;
+  border: none;
+  font-size: 16px;
+  padding: 16px;
+  cursor: pointer;
+  margin-right: 10px;
+  margin-left: 10px;
+  border-radius: 10px;
+}
+
+.active {
+  background-color: #3498db;
+  color: rgb(0, 0, 0);
+}
