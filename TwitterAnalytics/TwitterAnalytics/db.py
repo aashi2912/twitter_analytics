@@ -3,7 +3,7 @@ from pymongo import MongoClient
 # import json
 
 client = MongoClient('mongodb://localhost:27017')
-dbname = client['TwitterAnalytics']
+dbname = client['TweetAnalytics']
 
 TweetCollection = dbname['tweets']
 UsersCollection = dbname['users']
