@@ -48,7 +48,7 @@ class SearchBar extends Component {
         <form className="search-form" onSubmit={this.handleSubmit}>
           <input
             type="text"
-            placeholder="Enter @xyz for Profiles and #xyz for Hashtags searches"
+            placeholder="Enter @xyz for Profiles and #xyz for Hashtags searches, default result displayed is of user @therock "
             value={this.state.searchTerm}
             onChange={this.handleInputChange}
             className="search-input"

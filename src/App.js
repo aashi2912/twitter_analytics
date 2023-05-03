@@ -4,6 +4,7 @@ import Dashboard from "./components/Dashboard";
 import Header from "./components/Header";
 import SearchBar from "./components/Search";
 import { topicTitleEnum } from "./enum/topic-title.enum";
+import sampleDataForHosting from "./sample.js";
 
 let adaptedData = {};
 const adaptData = (data, user, hashtag) => {
@@ -85,7 +86,7 @@ const getCountPercentage = (alltopicTweets) => {
 };
 
 function App() {
-  const [data, setData] = useState({});
+  const [data, setData] = useState(adaptData(sampleDataForHosting, "therock"));
 
   const handleChange = () => {
     setData(adaptedData);
@@ -105,7 +106,7 @@ function App() {
     }
     const response = await fetch(url);
     const jsonData = await response.json();
-    // console.log("soni", jsonData);
+    console.log("soni", jsonData);
     adaptedData = adaptData(JSON.parse(jsonData), user, hashtag);
     handleChange(adaptedData);
   };
