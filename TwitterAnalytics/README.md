@@ -22,6 +22,6 @@ This will run the development server on http://localhost:8000/
 
 Open your web browser and navigate to [http://localhost:8000/](http://localhost:8000/)
 
-You should see the default Django welcome page. You can now start building your Django project.
+You should see the default Django welcome page.
 
 ### `python manage.py runserver`
